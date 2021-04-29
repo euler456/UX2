@@ -1,7 +1,10 @@
 
 @media screen and (max-width: 600px){
 
-
+input{
+  margin-right: 90%;
+  margin-bottom: 10px;
+}
  h2,h1{
     color: ghostwhite;
  }
@@ -44,11 +47,6 @@
   }
   .order1{
     margin-bottom: 30px;
-  }
-  #search{
-   
-    width: 100%;
-   padding: 20px;
   }
   
   .dark-mode {

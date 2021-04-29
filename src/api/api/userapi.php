@@ -1,10 +1,12 @@
 <?php
 
 require_once('./vendor/autoload.php');
-require_once('./db.php');
 require_once('./se.php');
+require_once('./userfunction.php');
 
-$sqsdb = new sqsModel;
+$sqsdb = new sqsuser;
+
+
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -45,15 +47,15 @@ if(empty($request->query->all())) {
                     if($request->request->has('username') and
                     $request->request->has('email') and
                     $request->request->has('phone') and
-                    $request->request->has('password2') and
                     $request->request->has('postcode') and
-                    $request->request->has('password') ) {
+                    $request->request->has('password') and
+                    $request->request->has('password2') ) {
                     $res = $session->get('sessionObj')->register(
                         $request->request->getAlpha('username'),
                         $request->request->get('email'),
                         $request->request->get('phone'),
-                        $request->request->get('password'), 
-                        $request->request->get('postcode'),    
+                        $request->request->get('postcode'), 
+                        $request->request->get('password'),    
                        $request->request->get('csrf')
                     );
                     if($res === true) {
@@ -66,10 +68,12 @@ if(empty($request->query->all())) {
                 }
                 }
             }
+        
            else {
                 $response->setStatusCode(400);
             }
-        } elseif($request->query->getAlpha('action') == 'login') {
+        }
+       elseif($request->query->getAlpha('action') == 'login') {
             if($request->request->has('username') and $request->request->has('password'))
              {
                 $res = $session->get('sessionObj')->login($request->request->get('username'),
@@ -88,7 +92,60 @@ if(empty($request->query->all())) {
                 $response->setContent(json_encode($request));                
                 $response->setStatusCode(404);
             }
-        } else {
+
+        } 
+        elseif($request->query->getAlpha('action') == 'isloggedin') {
+            $res = $session->get('sessionObj')->isLoggedIn();
+
+            if($res == false) {
+                $response->setStatusCode(403);
+            } elseif(count($res) == 1) {
+                $response->setStatusCode(203);
+                $response->setContent(json_encode($res));
+            }
+            
+        }
+        elseif($request->query->getAlpha('action') == 'update') {
+            $res = $session->get('sessionObj')->isLoggedIn();
+            if(($request->request->has('username')) && ( count($res) == 1)) {   
+                $res = $sqsdb->userExists($request->request->get('username'));
+          
+              if($res) {
+                    $response->setStatusCode(400);
+                }
+                else {
+                    if(
+                         $request->request->has('currentusername') and
+                        $request->request->has('username') and
+                    $request->request->has('email') and
+                    $request->request->has('phone') and
+                    $request->request->has('postcode') and
+                    $request->request->has('password') and
+                    $request->request->has('password2') ) {
+                    $res = $session->get('sessionObj')->update(
+                    //    $res = $sqsdb->userid($request->request->get('currentusername')),
+                        $request->request->getAlpha('username'),
+                        $request->request->get('email'),
+                        $request->request->get('phone'),
+                        $request->request->get('postcode'), 
+                        $request->request->get('password'),    
+                       $request->request->get('csrf')
+                    );
+                    if($res === true) {
+                        $response->setStatusCode(201);
+                    } elseif($res === false) {
+                        $response->setStatusCode(403);
+                    } elseif($res === 0) {
+                        $response->setStatusCode(500);
+                    }
+                }
+                }
+            }
+          else {
+                $response->setStatusCode(402);
+            }
+        }
+        else {
             $response->setStatusCode(400);
         }
     }
@@ -102,19 +159,11 @@ if(empty($request->query->all())) {
                     $response->setStatusCode(204);
                 }
             }
-        } elseif($request->query->getAlpha('action') == 'isloggedin') {
-            $res = $session->get('sessionObj')->isLoggedIn();
-            if($res == false) {
-                $response->setStatusCode(403);
-            } elseif(count($res) == 1) {
-                $response->setStatusCode(200);
-                $response->setContent(json_encode($res));
-            }
-        } elseif($request->query->getAlpha('action') == 'logout') {
+        }  elseif($request->query->getAlpha('action') == 'logout') {
             $session->get('sessionObj')->logout();
             $response->setStatusCode(200);
         } else {
-            $response->setStatusCode(400);
+            $response->setStatusCode(418);
         }
     }
     if($request->getMethod() == 'DELETE') {           // delete queue, delete comment

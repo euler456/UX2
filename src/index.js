@@ -33,19 +33,16 @@ class Main extends React.Component {
       <HashRouter>
       <div class="container">
         <h1 >Freshly Login</h1>
-    
         <ul id="header" class="row">
-          <li><NavLink to="/" class="col">Home</NavLink></li>
-          <li><NavLink to="/Login" class="col ">Login</NavLink></li>
+          <li><NavLink to="/" class="col">Login</NavLink></li>
+          <li><NavLink to="/Home" class="col ">Orderchart</NavLink></li>
           <li><NavLink to="/contact" class="col ">Contact</NavLink></li>
           <li><NavLink to="/Setting" class="col ">Setting</NavLink></li>
-        
           <li class="col "> <button id="dark" class="btn btn-light" onClick={this.changeColor}>Darkmode</button></li>
-          <input id="search" type="text" placeholder="Search.."></input>
         </ul>
         <div id="content">
-           <Route exact path="/" component={Home}/>
-           <Route exact path="/Login" component={Login}/>
+           <Route exact path="/" component={Login}/>
+           <Route exact path="/Home" component={Home}/>
            <Route path="/Sign" component={Sign}/>
            <Route path="/contact" component={Contact}/>
            <Route path="/Setting" component={Setting}/>
@@ -59,35 +56,60 @@ class Main extends React.Component {
   }
 }
 class Home extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      error: null,
+      isLoaded: false,
+      items: []
+    };
+  }
+  componentDidMount() {
+    fetch('http://localhost/UX2/src/api/api/orderapi.php?action=displayorderfood',
+    {
+        method: 'POST',
+        credentials: 'include'
+    }
+    ).then((res)=>res.json())
+    .then(response=>{console.log(response);
+        let output = '';
+        for(let i in response){
+            output+=`<tr>
+            <td class='fd-id'>${response[i].F_ID}</td>
+            <td class='fd-name'>${response[i].foodname}</td>
+            <td ><img src='../images/${response[i].image}' style="width: 100px; height: 100px;"></td>
+            <td class='price'>${response[i].price}</td>
+            <td><input type="number" class="fd-value" name="quantity" value="0" min="0" max="50"></td>
+            <td>${response[i].options}</td>
+            <td><button class="btnSelect">Select</button></td>
+            </tr>`;
+        }
+        document.querySelector('.ordertbody').innerHTML = output;
+    }).catch(error=>console.error(error));
+  }
+ 
   render() {
-   
-    return (
-      <div >
-        <h2>Home</h2>
-        <h4>Xiao Long Bao</h4>
-        <img src={XiaoLongBao} alt="XiaoLongBao"/>
-        <p>Xiaolongbao is a type of Chinese steamed bun (baozi) from Jiangsu province, especially associated with Wuxi and Shanghai (Shanghai was formerly a part of Jiangsu province)</p>
-        
-        <h4 class="order">Order:</h4>
-        <input type="number" name="order" class="order1" placeholder="0" ></input>
-        <h4>Ribs</h4>
-        <img src={Ribs} alt="Ribs"/>
-        <p>Ribs of pork, beef, lamb, and venison are a cut of meat. The term ribs usually refers to the less meaty part of the chops, often cooked as a slab (not cut into separate ribs).</p>
-        <h4 class="order">Order:</h4>
-        <input type="number" name="order" class="order1" placeholder="0"  ></input>
-        <h4>gruel</h4>
-        <img src={gruel} alt="gruel"/>
-        <p>Gruel is a food consisting of some type of cereal—such as ground oats, wheat, rye or rice—boiled in water or milk.</p>
-        <h4 class="order">Order:</h4>
-        <input type="number" name="order" class="order1" placeholder="0"  ></input>
-         <br/>
-      
-         <form action="https://localhost:9998/api.php?action=login" 
-          method="POST" id="loginform">
-        <button  id="fat-btn" class="btn btn-success">Order</button>
-        </form>
-        </div>
-    );
+    const { error, isLoaded, items } = this.state;
+    if (error) {
+      return <div>Error: {error.message}</div>;
+    } else if (!isLoaded) {
+      return <div>Loading...</div>;
+    } else {
+      return (
+        <table>
+        <thead>
+            <th>F_id</th>
+            <th>Name</th>
+            <th>image</th>
+            <th>Price</th>
+            <th>Quantity</th>
+        </thead>
+        <tbody class="ordertbody" id="orderform">
+
+        </tbody>
+    </table>
+      );
+    }
   }
 }
 class Login extends React.Component {
