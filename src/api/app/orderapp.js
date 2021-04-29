@@ -1,4 +1,4 @@
-document.getElementById('orderform').innerHTML=fetchdisplayorderfood();
+//document.getElementById('orderform').innerHTML=fetchdisplayorderfood();
 function fetchdisplayorderfood(){
 fetch('http://localhost/apitesting/api/orderapi.php?action=displayorderfood',
 {
