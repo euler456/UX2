@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState ,useEffect } from 'react';
 import ReactDOM from 'react-dom';
 import "./index.css";
 //import { fetchlogin, fetchregister,fetchaccountexists ,fetchisloggedin,fetchlogout } from './api/app/app.js';
@@ -52,66 +52,49 @@ class Main extends React.Component {
     );
   }
 }
+const [item, setItem ]= useState([]);
 class Home extends React.Component {
-  const [error, setError] = useState(null);
-  const [isLoaded, setIsLoaded] = useState(false);
-  const [items, setItems] = useState([]);
-  componentDidMount() {
-    const requestOptions = {
-      method: 'POST',
-      credentials: 'include'
-  };
-  useEffect(() => {
-    fetch("http://localhost/UX2/src/api/api/orderapi.php?action=displayorderfood",requestOptions)
-      .then(res => res.json())
-      .then(
-        (result) => {
-          setIsLoaded(true);
-          setItems(result);
-        },
-        // 注意：需要在此处处理错误
-        // 而不是使用 catch() 去捕获错误
-        // 因为使用 catch 去捕获异常会掩盖掉组件本身可能产生的 bug
-        (error) => {
-          setIsLoaded(true);
-          setError(error);
-        }
-      )
-  }, [])
- 
+  render(){
   
-  }
- 
-  render() {
-    const { error, isLoaded, items } = this.state;
-    if (error) {
-      return <div>Error: {error.message}</div>;
-    } else if (!isLoaded) {
-      return <div>Loading...</div>;
-    } else {
-      return (
-        <table>
-        <thead>
-            <th>F_id</th>
-            <th>Name</th>
-            <th>image</th>
-            <th>Price</th>
-            <th>Quantity</th>
-        </thead>
-        <tbody >
-       <tr>
-{items.map(item => (
-            <td >
-              {item.F_ID} 
-            </td>
-          ))}
-        </tr>
-        </tbody>
-    </table>
-      );
-    }
+    useEffect(() =>{
+      fetch('http://localhost/UX2/src/api/api/orderapi.php?action=displayorderfood',
+      {
+              method: 'POST',
+              credentials: 'include'
+          }
+          ).then((res)=>res.json())
+          .then((result) => {setItem(result);})},[])
+          return (
+            <table>
+            <thead>
+                <th>F_id</th>
+                <th>Name</th>
+                <th>image</th>
+                <th>Price</th>
+                <th>Quantity</th>
+            </thead>
+            <tbody>
+             {
+               item.map(data =>{
+                 <tr>
+            <td class='fd-id'>{data.F_ID}</td>
+            <td class='fd-name'>{data.foodname}</td>
+            <td ><img src='../images/{data.image}' style="width: 100px; height: 100px;"></img></td>
+            <td class='price'>{data.price}</td>
+            <td><input type="number" cla  ss="fd-value" name="quantity" value="0" min="0" max="50"></input></td>
+            <td>{data.options}</td>
+            <td><button class="btnSelect">Select</button></td>
+             </tr>
+                })}
+            
+            </tbody>
+        </table>
+          );
   }
 }
+
+
+
 class Login extends React.Component {
   render() {
     return (
