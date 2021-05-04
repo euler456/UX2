@@ -1,7 +1,8 @@
-import React, { useState ,useEffect } from 'react';
+import React from 'react';
 import ReactDOM from 'react-dom';
 import "./index.css";
 //import { fetchlogin, fetchregister,fetchaccountexists ,fetchisloggedin,fetchlogout } from './api/app/app.js';
+//"C:\Program Files\Google\Chrome\Application\chrome.exe" --disable-web-security --disable-gpu --user-data-dir="C:\tmp"
 import {
   Route,
   NavLink,
@@ -52,18 +53,25 @@ class Main extends React.Component {
     );
   }
 }
-const [item, setItem ]= useState([]);
+
 class Home extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      hits: [],
+    };
+  }
+  componentDidMount() {
+    fetch('http://localhost/UX2/src/api/api/orderapi.php?action=displayorderfood',
+    {
+            method: 'POST',
+            credentials: 'include'
+        }
+        )   .then(response => response.json())
+        .then(data => this.setState({  hits: data.hits }));
+      }
   render(){
-  
-    useEffect(() =>{
-      fetch('http://localhost/UX2/src/api/api/orderapi.php?action=displayorderfood',
-      {
-              method: 'POST',
-              credentials: 'include'
-          }
-          ).then((res)=>res.json())
-          .then((result) => {setItem(result);})},[])
+    const { hits } = this.state;
           return (
             <table>
             <thead>
@@ -74,19 +82,17 @@ class Home extends React.Component {
                 <th>Quantity</th>
             </thead>
             <tbody>
-             {
-               item.map(data =>{
+                  {hits.map(hit =>
                  <tr>
-            <td class='fd-id'>{data.F_ID}</td>
-            <td class='fd-name'>{data.foodname}</td>
-            <td ><img src='../images/{data.image}' style="width: 100px; height: 100px;"></img></td>
-            <td class='price'>{data.price}</td>
-            <td><input type="number" cla  ss="fd-value" name="quantity" value="0" min="0" max="50"></input></td>
-            <td>{data.options}</td>
+            <td class='fd-id'>{hit.F_ID}</td>
+            <td class='fd-name'>{hit.foodname}</td>
+            <td ><img src='../images/{hit.image}' style="width: 100px; height: 100px;"></img></td>
+            <td class='price'>{hit.price}</td>
+            <td><input type="number" class="fd-value" name="quantity" value="0" min="0" max="50"></input></td>
+            <td>{hit.options}</td>
             <td><button class="btnSelect">Select</button></td>
              </tr>
-                })}
-            
+                   )}
             </tbody>
         </table>
           );
