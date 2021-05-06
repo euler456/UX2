@@ -58,7 +58,7 @@ class Home extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      hits: [],
+      hits: []
     };
   }
   componentDidMount() {
@@ -68,33 +68,35 @@ class Home extends React.Component {
             credentials: 'include'
         }
         )   .then(response => response.json())
-        .then(data => this.setState({  hits: data.hits }));
+        .then(data => this.setState({ hits: data }));
       }
   render(){
-    const { hits } = this.state;
+    const { hits } = this.state; 
           return (
             <table>
             <thead>
-                <th>F_id</th>
+        
                 <th>Name</th>
                 <th>image</th>
                 <th>Price</th>
                 <th>Quantity</th>
             </thead>
             <tbody>
-                  {hits.map(hit =>
+                  {hits.map(hit =>(
                  <tr>
-            <td class='fd-id'>{hit.F_ID}</td>
+            <td hidden class='fd-id'>{hit.F_ID}</td>
             <td class='fd-name'>{hit.foodname}</td>
-            <td ><img src='../images/{hit.image}' style="width: 100px; height: 100px;"></img></td>
+            <td ><img src={require(`./pic/${hit.image}.jpg`).default}></img></td>
             <td class='price'>{hit.price}</td>
-            <td><input type="number" class="fd-value" name="quantity" value="0" min="0" max="50"></input></td>
+            <td><input type="number" class="fd-value" name="quantity" min="0" max="50"></input></td>
             <td>{hit.options}</td>
             <td><button class="btnSelect">Select</button></td>
              </tr>
-                   )}
+                  ) )}
             </tbody>
         </table>
+
+
           );
   }
 }
@@ -102,18 +104,56 @@ class Home extends React.Component {
 
 
 class Login extends React.Component {
+  constructor() {
+    super();
+    this.handleSubmit = this.handleSubmit.bind(this);
+  }
+  handleSubmit(event) {
+    event.preventDefault();
+    const data = new FormData(event.target);
+    
+    fetch('http://localhost/apitesting/api/userapi.php?action=login', {
+      method: 'POST',
+      credentials: 'include',
+      body: data
+      
+    }) .then(function(headers) {
+      if(headers.status == 401) {
+          console.log('login failed');
+          localStorage.removeItem('csrf');
+          localStorage.removeItem('username');
+          localStorage.removeItem('phone');
+          localStorage.removeItem('email');
+          localStorage.removeItem('postcode');
+          localStorage.removeItem('CustomerID');
+          return;
+      }
+      if(headers.status == 203) {
+          console.log('registration required');
+          // only need csrf
+      }
+  
+  })
+  .catch(function(error) {
+      console.log(error)
+  });
+  }
   render() {
     return (
       <div>
         <h2>Login</h2>
-        <form action="#" method="POST" id="loginform">
+        <form  onSubmit={this.handleSubmit}>
               <h4> username</h4>
               <input type="text" name="username" placeholder="user name" id="loginuser" value="username" onchange="getuserid()" required></input>
               <h4> password</h4>
               <input type="password" name="password" placeholder="password" id="loginpass" value="password" required></input>
               <input type="submit" name="submit"></input>
+            
        </form>
-        </div>
+        <button>
+           <Route path="/Sign" component={Sign}></Route>
+       </button>
+      </div>
 
     );
   }
