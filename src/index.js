@@ -1,5 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import { Redirect } from 'react-router';
 import "./index.css";
 //import { fetchlogin, fetchregister,fetchaccountexists ,fetchisloggedin,fetchlogout } from './api/app/app.js';
 //"C:\Program Files\Google\Chrome\Application\chrome.exe" --disable-web-security --disable-gpu --user-data-dir="C:\tmp"
@@ -111,8 +112,9 @@ class Login extends React.Component {
   handleSubmit(event) {
     event.preventDefault();
     const data = new FormData(event.target);
+    this.props.history.push('/Home');
     
-    fetch('http://localhost/apitesting/api/userapi.php?action=login', {
+    fetch('http://localhost/UX2/src/api/api/userapi.php?action=login', {
       method: 'POST',
       credentials: 'include',
       body: data
@@ -151,7 +153,7 @@ class Login extends React.Component {
             
        </form>
         <button>
-           <Route path="/Sign" component={Sign}></Route>
+        <NavLink to="/Sign" id="Signup">Sign Up</NavLink>
        </button>
       </div>
 
@@ -161,19 +163,62 @@ class Login extends React.Component {
 
 
 class Sign extends React.Component {
+  constructor() {
+    super();
+    this.handleSubmit = this.handleSubmit.bind(this);
+    this.state = {
+      value: ''
+    };
+  }
+  onChange(evt) {
+    this.setState({
+      value: evt.target.value.replace(/[^a-zA-Z]/g, '')
+    });
+ };
+ 
+  handleSubmit(event) {
+    event.preventDefault();
+    const data = new FormData(event.target);
+    
+    fetch('http://localhost/UX2/src/api/api/userapi.php?action=register', {
+      method: 'POST',
+      credentials: 'include',
+      body: data
+      
+    })   .then(function(headers) {
+      if(headers.status == 400) {
+          console.log('user exists');
+          return;
+      }
+   
+      if(headers.status == 201) {
+          console.log('registration updated');
+          this.setState({ redirectToReferrer: true});
+          return;
+      }
+     
+  })
+  .catch(function(error) {console.log(error)});
+  }
   render() {
+    const { redirectToReferrer } = this.state;
+    if (redirectToReferrer == true) {
+      return <Redirect to={Login} />
+    }
+    else{
+      alert("Fail to sign up");
+    }
     return (
       <div>
        
          <h1>Sign Up</h1>
-         <form action="#" method="POST" id="registerform">
-              <h1>registerform</h1>
+         <form  onSubmit={this.handleSubmit}>
               <h4> username</h4>
-             <input type="text" name="username"  id="regusername" value="username" required></input>
+             <input type="text" name="username" onChange={this.onChange.bind(this)} value={this.state.value} id="regusername" required></input>
              <h4> email</h4>
-              <input type="email" name="email"  id="regemail" value="username@username" required></input>
+              <input type="email" name="email"  id="regemail" value="username@usee" required></input>
               <h4> phone</h4>
-              <input type="text" name="phone"  id="regphone" value="1111111111" required></input>
+              <input type="text" name="phone"  id="regphone" value="11666661" required></input>
               <h4> postcode</h4>
               <input type="number" name="postcode"  id="regpostcode" value="1010" required></input>
               <h4> password</h4>
@@ -189,7 +234,42 @@ class Sign extends React.Component {
 }
 
 class Setting extends React.Component {
+  constructor() {
+    super();
+    this.handleSubmit = this.handleSubmit.bind(this);
+    this.state = {
+      value: ''
+    };
+  }
+  onChange(evt) {
+    this.setState({
+      value: evt.target.value.replace(/[^a-zA-Z]/g, '')
+    });
+ };
  
+  handleSubmit(event) {
+    event.preventDefault();
+    const data = new FormData(event.target);
+    this.props.history.push('/');
+    fetch('http://localhost/UX2/src/api/api/userapi.php?action=update', {
+      method: 'POST',
+      credentials: 'include',
+      body: data
+      
+    })    .then(function(headers) {
+      if(headers.status == 400) {
+          console.log('username exists');
+          return;
+      }
+   
+      if(headers.status == 201) {
+          console.log(' updated');
+          return;
+      }
+     
+  })
+  .catch(function(error) {console.log(error)});
+  }
   render() {
   
     return (
@@ -197,11 +277,10 @@ class Setting extends React.Component {
          <h1>Edit My profile</h1>
          <div>
       </div>
-      <form action="#" method="POST" id="updateform">
-              <h1>updateform</h1>
+      <form onSubmit={this.handleSubmit}>
               <input type="hidden" name="currentusername"  id="currentusername" required hidden></input>
               <h4> username</h4>
-              <input type="text" name="username"  id="upusername" value="userna" required></input>
+              <input type="text" name="username"  id="upusername"  onChange={this.onChange.bind(this)} value={this.state.value} required></input>
               <h4> email</h4>
               <input type="email" name="email"  id="upemail" value="username@username2" required></input>
               <h4> phone</h4>
