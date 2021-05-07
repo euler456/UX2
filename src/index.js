@@ -1,13 +1,15 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { Redirect } from 'react-router';
 import "./index.css";
+import $ from 'jquery';
+//import Redirect from 'react-router'
 //import { fetchlogin, fetchregister,fetchaccountexists ,fetchisloggedin,fetchlogout } from './api/app/app.js';
 //"C:\Program Files\Google\Chrome\Application\chrome.exe" --disable-web-security --disable-gpu --user-data-dir="C:\tmp"
 import {
   Route,
   NavLink,
-  HashRouter
+  HashRouter,
+  Redirect 
 } from "react-router-dom";
 /*fetchlogin();
 fetchregister();
@@ -70,7 +72,10 @@ class Home extends React.Component {
         }
         )   .then(response => response.json())
         .then(data => this.setState({ hits: data }));
-      }
+    
+    
+    
+    }
   render(){
     const { hits } = this.state; 
           return (
@@ -108,18 +113,22 @@ class Login extends React.Component {
   constructor() {
     super();
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.state = {
+      redirect: false
+    };
+    
   }
   handleSubmit(event) {
     event.preventDefault();
     const data = new FormData(event.target);
-    this.props.history.push('/Home');
+  
     
     fetch('http://localhost/UX2/src/api/api/userapi.php?action=login', {
       method: 'POST',
       credentials: 'include',
       body: data
       
-    }) .then(function(headers) {
+    }) .then((headers)=> {
       if(headers.status == 401) {
           console.log('login failed');
           localStorage.removeItem('csrf');
@@ -128,12 +137,40 @@ class Login extends React.Component {
           localStorage.removeItem('email');
           localStorage.removeItem('postcode');
           localStorage.removeItem('CustomerID');
+
+          alert('Can not login')
           return;
       }
       if(headers.status == 203) {
           console.log('registration required');
           // only need csrf
       }
+      if(headers.status == 200) {
+        console.log('login successful');
+        this.setState({ redirect: true });
+        fetch('http://localhost/UX2/src/api/api/foodapi.php?action=createorder', 
+        {
+            method: 'POST',
+            credentials: 'include'
+        })
+        .then(function(headers) {
+            if(headers.status == 400) {
+                console.log('can not order you are not loggedin');
+                return;
+            }
+         
+            if(headers.status == 201) {
+                console.log('going to order');
+                alert('start order');
+                return;
+            }
+           
+        })
+        .catch(function(error) {console.log(error)});
+
+        // only need csrf
+    }
+
   
   })
   .catch(function(error) {
@@ -141,6 +178,12 @@ class Login extends React.Component {
   });
   }
   render() {
+    const { redirect } = this.state;
+    // const { redirectToReferrer } = this.state;
+     if (redirect) {
+       return <Redirect to='/Home' />
+     }
+  
     return (
       <div>
         <h2>Login</h2>
@@ -167,8 +210,10 @@ class Sign extends React.Component {
     super();
     this.handleSubmit = this.handleSubmit.bind(this);
     this.state = {
-      value: ''
+      value: '',
+      redirect: false
     };
+    
   }
   onChange(evt) {
     this.setState({
@@ -179,21 +224,22 @@ class Sign extends React.Component {
   handleSubmit(event) {
     event.preventDefault();
     const data = new FormData(event.target);
-    
     fetch('http://localhost/UX2/src/api/api/userapi.php?action=register', {
       method: 'POST',
       credentials: 'include',
       body: data
       
-    })   .then(function(headers) {
-      if(headers.status == 400) {
+    })   .then((headers) =>{
+      if(headers.status == 418) {
           console.log('user exists');
+          //this.setState({ redirectToReferrer: false});
+          alert("username exists");
           return;
       }
    
       if(headers.status == 201) {
           console.log('registration updated');
-          this.setState({ redirectToReferrer: true});
+          this.setState({ redirect: true });
           return;
       }
      
@@ -201,12 +247,10 @@ class Sign extends React.Component {
   .catch(function(error) {console.log(error)});
   }
   render() {
-    const { redirectToReferrer } = this.state;
-    if (redirectToReferrer == true) {
-      return <Redirect to={Login} />
-    }
-    else{
-      alert("Fail to sign up");
+    const { redirect } = this.state;
+   // const { redirectToReferrer } = this.state;
+    if (redirect) {
+      return <Redirect to='/' />
     }
     return (
       <div>
@@ -238,7 +282,8 @@ class Setting extends React.Component {
     super();
     this.handleSubmit = this.handleSubmit.bind(this);
     this.state = {
-      value: ''
+      value: '',
+      redirect: false
     };
   }
   onChange(evt) {
@@ -259,11 +304,14 @@ class Setting extends React.Component {
     })    .then(function(headers) {
       if(headers.status == 400) {
           console.log('username exists');
+          alert('update failed');
           return;
       }
    
       if(headers.status == 201) {
           console.log(' updated');
+          alert('update successful');   
+          this.setState({ redirect: true });
           return;
       }
      
@@ -271,7 +319,11 @@ class Setting extends React.Component {
   .catch(function(error) {console.log(error)});
   }
   render() {
-  
+    const { redirect } = this.state;
+   // const { redirectToReferrer } = this.state;
+    if (redirect) {
+      return <Redirect to='/' />
+    }
     return (
       <div >
          <h1>Edit My profile</h1>
@@ -328,9 +380,6 @@ class Contact extends React.Component {
     );
   }
 }
-
-
-
 ReactDOM.render(
   <Main/>, 
   document.getElementById("root")

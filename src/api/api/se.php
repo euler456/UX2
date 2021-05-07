@@ -103,9 +103,9 @@
                         return false;
                     }
                 }
-    public function createorder($orderstatus,$totalprice) {
+    public function createorder() {
                     global $sqsdb;
-                        if($sqsdb->createorderform( $orderstatus,$this->CustomerID,$totalprice)) {
+                        if($sqsdb->createorderform( $this->CustomerID)) {
                             return true;
                         } else {
                             return 0;

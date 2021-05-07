@@ -114,13 +114,7 @@ if(empty($request->query->all())) {
                     $response->setStatusCode(403);
                 }
         else{
-            if(
-                $request->request->has('orderstatus') and
-            $request->request->has('totalprice')   ) {
-           $res = $session->get('sessionObj')->createorder(
-            $request->request->get('orderstatus'),
-                $request->request->get('totalprice')
-            );
+           $res = $session->get('sessionObj')->createorder();
              if($res === true) {
                  $response->setStatusCode(201);
              } elseif($res === false) {
@@ -128,7 +122,7 @@ if(empty($request->query->all())) {
              } elseif($res === 0) {
                  $response->setStatusCode(500);
              }
-            }
+            
             else {
                 $response->setStatusCode(400);
             }

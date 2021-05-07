@@ -74,12 +74,12 @@ exit(json_encode($result));
             return false;
         }
     }
-    function createorderform($orderstatus,$CustomerID,$totalprice) {
-        $sql = "INSERT INTO orderform (orderstatus,CustomerID,totalprice)  VALUES (:orderstatus,:CustomerID,:totalprice);";
+    function createorderform($CustomerID) {
+        $sql = "INSERT INTO orderform (orderstatus,CustomerID,totalprice)  VALUES ('Notpayed',:CustomerID,'0');";
         $stmt = $this->dbconn->prepare($sql);  
-        $stmt->bindParam(':orderstatus', $orderstatus, PDO::PARAM_STR);
+       // $stmt->bindParam(':orderstatus', $orderstatus, PDO::PARAM_STR);
         $stmt->bindParam(':CustomerID', $CustomerID, PDO::PARAM_INT);    
-        $stmt->bindParam(':totalprice', $totalprice, PDO::PARAM_INT);   
+       // $stmt->bindParam(':totalprice', $totalprice, PDO::PARAM_INT);   
         $result = $stmt->execute();
         if($result === true) {
             return true;
