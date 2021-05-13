@@ -117,17 +117,17 @@
         $sqsdb->displayorderfood();
         return $sqsdb;
     }    
-    public function orderquantity($F_ID,$foodname,$price,$quantity,$totalprice,$orderID) {
+    public function orderquantity($F_ID,$foodname,$price,$quantity,$totalprice) {
         global $sqsdb;
-            if($sqsdb->orderquantityfood($F_ID,$foodname,$price,$quantity,$totalprice,$orderID)) {
+            if($sqsdb->orderquantityfood($F_ID,$foodname,$price,$quantity,$totalprice, $this->CustomerID)) {
                 return true;
             } else {
                 return false;
             }
         }
-    public function showorderform($orderID) {
+    public function showorderform() {
             global $sqsdb;
-            $sqsdb->displayshoworderform($orderID);
+            $sqsdb->displayshoworderform($this->CustomerID);
             return $sqsdb;
         }
     public function orderdelete($orderitem_ID) {
@@ -149,9 +149,14 @@
     $sqsdb->getconfirmorderform($this->CustomerID);
     return $sqsdb;
 }   
-public function sumtotalprice($orderID) {
+public function sumtotalprice() {
     global $sqsdb;
-    $sqsdb->sumtotalpriceff($orderID);
+    if($sqsdb->sumtotalpriceff($this->CustomerID)){
+        return true;
+    }else{
+        return false;
+    }
+    ;
     return $sqsdb;
 } 
 public function checkout($cname,$ccnum,$expmonth,$expyear,$cvv) {

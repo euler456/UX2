@@ -1,27 +1,4 @@
 //document.getElementById('orderform').innerHTML=fetchdisplayorderfood();
-function fetchdisplayorderfood(){
-fetch('http://localhost/apitesting/api/orderapi.php?action=displayorderfood',
-{
-    method: 'POST',
-    credentials: 'include'
-}
-).then((res)=>res.json())
-.then(response=>{console.log(response);
-    let output = '';
-    for(let i in response){
-        output+=`<tr>
-        <td class='fd-id'>${response[i].F_ID}</td>
-        <td class='fd-name'>${response[i].foodname}</td>
-        <td ><img src='../images/${response[i].image}' style="width: 100px; height: 100px;"></td>
-        <td class='price'>${response[i].price}</td>
-        <td><input type="number" class="fd-value" name="quantity" value="0" min="0" max="50"></td>
-        <td>${response[i].options}</td>
-        <td><button class="btnSelect">Select</button></td>
-        </tr>`;
-    }
-    document.querySelector('.ordertbody').innerHTML = output;
-}).catch(error=>console.error(error));
-}
 
 
 
@@ -45,7 +22,30 @@ fetch('http://localhost/apitesting/api/orderapi.php?action=orderID',
 }).catch(error=>console.error(error));
 }
 
-
+function fetchdisplayorderfood(){
+    fetch('http://localhost/apitesting/api/orderapi.php?action=displayorderfood',
+    {
+        method: 'POST',
+        credentials: 'include'
+    }
+    ).then((res)=>res.json())
+    .then(response=>{console.log(response);
+        let output = '';
+        for(let i in response){
+            output+=`<tr>
+            <td class='fd-id'>${response[i].F_ID}</td>
+            <td class='fd-name'>${response[i].foodname}</td>
+            <td ><img src='../images/${response[i].image}' style="width: 100px; height: 100px;"></td>
+            <td class='price'>${response[i].price}</td>
+            <td><input type="number" class="fd-value" name="quantity" value="0" min="0" max="50"></td>
+            <td>${response[i].options}</td>
+            <td><button class="btnSelect">Select</button></td>
+            </tr>`;
+        }
+        document.querySelector('.ordertbody').innerHTML = output;
+    }).catch(error=>console.error(error));
+    }
+    
 $(document).ready(function(){
     var col6;
     $("#ordernameid").on('click', '.btnorderid', function() {

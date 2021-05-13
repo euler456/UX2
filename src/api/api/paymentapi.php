@@ -39,12 +39,6 @@ if(empty($request->query->all())) {
     }
     if($request->getMethod() == 'POST') {             // register
         if($request->query->getAlpha('action') =='checkout') {    
-            if(
-                $request->request->has('cname') and
-                $request->request->has('ccnum') and
-            $request->request->has('expmonth')   and
-            $request->request->has('expyear') and
-            $request->request->has('cvv')    ) {
            $res = $session->get('sessionObj')->checkout(
             $request->request->get('cname'),
                 $request->request->get('ccnum'),
@@ -60,10 +54,7 @@ if(empty($request->query->all())) {
                  $response->setStatusCode(500);
              }
             }
-            else {
-                $response->setStatusCode(401);
-            }
-        }
+    
         elseif($request->query->getAlpha('action') == 'checkoutupdate') {
             $res = $session->get('sessionObj')->checkoutupdate( $request->request->get('orderID'));
     }

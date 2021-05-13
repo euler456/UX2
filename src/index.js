@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import "./index.css";
-import $ from 'jquery';
+import $, { extend } from 'jquery';
 //import Redirect from 'react-router'
 //import { fetchlogin, fetchregister,fetchaccountexists ,fetchisloggedin,fetchlogout } from './api/app/app.js';
 //"C:\Program Files\Google\Chrome\Application\chrome.exe" --disable-web-security --disable-gpu --user-data-dir="C:\tmp"
@@ -9,26 +9,52 @@ import {
   Route,
   NavLink,
   HashRouter,
-  Redirect 
+  Redirect ,
+  BrowserRouter,
+  Router
 } from "react-router-dom";
-/*fetchlogin();
-fetchregister();
-fetchaccountexists();
-fetchisloggedin();
-fetchlogout();*/
 const green = '#006400';
 const black = '#000000';
 class Main extends React.Component {
   constructor(props){
     super(props);
-    this.state = { color: green };
+    this.state = { color: green,redirect:false };
     this.changeColor = this.changeColor.bind(this);
+    this.Logout = this.Logout.bind(this);
   }
   changeColor(){
     const newColor = this.state.color == green ? black : green;
     this.setState({ color: newColor })
   }
+  Logout=()=>{
+    fetch('http://localhost/UX2/src/api/api/userapi.php?action=logout', 
+    {
+        method: 'GET',
+        credentials: 'include'
+    })
+    .then((headers) =>{
+        if(headers.status != 200) {
+            console.log('logout failed Server-Side, but make client login again');
+        }
+        else{
+        localStorage.removeItem('csrf');
+        localStorage.removeItem('username');
+        localStorage.removeItem('email');
+        localStorage.removeItem('phone');
+        localStorage.removeItem('postcode');
+        localStorage.removeItem('CustomerID');    
+        this.setState({ redirect: true });
+        alert("logout already");}
+        
+    })
+    .catch(function(error) {console.log(error)});
+  }
   render() {
+    const { redirect } = this.state;
+     if (redirect) {
+      console.log('log out');
+      return (<Redirect to='/' />);
+     }
     return (
       <div style={{background: this.state.color}}>
       <HashRouter>
@@ -39,6 +65,7 @@ class Main extends React.Component {
           <li><NavLink to="/Home" class="col ">Orderchart</NavLink></li>
           <li><NavLink to="/contact" class="col ">Contact</NavLink></li>
           <li><NavLink to="/Setting" class="col ">Setting</NavLink></li>
+          <li><a onClick={this.Logout}>Logout</a></li>
           <li class="col "> <button id="dark" class="btn btn-light" onClick={this.changeColor}>Darkmode</button></li>
         </ul>
         <div id="content">
@@ -48,6 +75,7 @@ class Main extends React.Component {
            <Route path="/contact" component={Contact}/>
            <Route path="/Setting" component={Setting}/>
            <Route path="/password" component={password}/>
+           <Route path="/payment" component={payment}/>
         </div>
         </div>
         
@@ -58,13 +86,102 @@ class Main extends React.Component {
 }
 
 class Home extends React.Component {
+  
   constructor(props) {
     super(props);
+    this.completeorder = this.completeorder.bind(this);
+    this.fetchorderdelete = this.fetchorderdelete.bind(this);
+  
     this.state = {
-      hits: []
+      hits: [],
+      redirect: false,
+      order:[]
     };
   }
+  fetchorderdelete= (dd)=>{
+    console.log(dd);
+    const fd = new FormData();
+    fd.append('orderitem_ID', dd);
+    console.log(fd);
+   fetch('http://localhost/UX2/src/api/api/orderapi.php?action=orderdelete', 
+   {
+       method: 'POST',
+       body: fd,
+       credentials: 'include'
+   })
+   .then(function(headers) {
+       if(headers.status == 400) {
+           console.log('can not delete');
+           return;
+       }
+    
+       if(headers.status == 201) {
+           console.log('delete succussful');
+           window.location.reload();
+           return;
+       }
+   })
+   .catch(function(error) {console.log(error)});
+     }
+  completeorder=()=>{
+    fetch('http://localhost/UX2/src/api/api/orderapi.php?action=sumtotalprice', 
+    {
+        method: 'POST',
+        credentials: 'include'
+    })
+   .then((headers) =>{
+        if(headers.status == 403) {
+            console.log('fail to sum ');
+            return;
+        }
+     
+        if(headers.status == 201) {
+            console.log('sumtotalprice');
+            this.setState({ redirect: true });
+            return;
+        }
+    })
+    .catch(function(error) {console.log(error)});
+     }
   componentDidMount() {
+    $(document).ready(()=>{
+      $("#orderform").on('click', '.btnSelect', function() {
+        var currentRow = $(this).closest("tr");
+        var col1 = currentRow.find(".fd-value").val(); 
+        var col2 = currentRow.find(".fd-id").html(); 
+        var col3 = currentRow.find(".fd-name").html(); 
+        var col4 = currentRow.find(".price").html();
+        var col5 =col4 * col1;
+        if(col1 !=0){
+        var fd = new FormData();
+        fd.append('F_ID',col2 );
+        fd.append('foodname', col3 );
+        fd.append('price', col4 );
+        fd.append('quantity', col1 );
+        fd.append('totalprice', col5 );
+        fetch('http://localhost/UX2/src/api/api/orderapi.php?action=orderquantity', 
+        {
+            method: 'POST',
+            body: fd,
+            credentials: 'include'
+        })
+       .then(function(headers) {
+            if(headers.status == 400) {
+                console.log('fail to add');
+                return;
+            }
+            if(headers.status == 201) {
+                console.log('addfood succussful');
+                window.location.reload();
+                return;
+            }
+        })
+        .catch(function(error) {console.log(error)});}
+        else{
+            alert("please select value");
+        }
+      });
+  });
     fetch('http://localhost/UX2/src/api/api/orderapi.php?action=displayorderfood',
     {
             method: 'POST',
@@ -72,23 +189,35 @@ class Home extends React.Component {
         }
         )   .then(response => response.json())
         .then(data => this.setState({ hits: data }));
-    
-    
-    
+    fetch('http://localhost/UX2/src/api/api/orderapi.php?action=showorderform',
+        {
+                method: 'POST',
+                credentials: 'include'
+            }
+            )   .then(response => response.json())
+            .then(data => this.setState({ order: data }));
     }
+
   render(){
     const { hits } = this.state; 
+    const { order } = this.state; 
+    const { redirect } = this.state;
+     if (redirect) {
+       return <Redirect to='/payment' />
+     }
           return (
+            <body>
+            <form>
             <table>
             <thead>
-        
                 <th>Name</th>
                 <th>image</th>
                 <th>Price</th>
                 <th>Quantity</th>
             </thead>
-            <tbody>
+            <tbody id="orderform">
                   {hits.map(hit =>(
+                    
                  <tr>
             <td hidden class='fd-id'>{hit.F_ID}</td>
             <td class='fd-name'>{hit.foodname}</td>
@@ -96,15 +225,46 @@ class Home extends React.Component {
             <td class='price'>{hit.price}</td>
             <td><input type="number" class="fd-value" name="quantity" min="0" max="50"></input></td>
             <td>{hit.options}</td>
-            <td><button class="btnSelect">Select</button></td>
+            <td><input type="submit" name="submit" class="btnSelect"></input></td>
              </tr>
+           
                   ) )}
             </tbody>
         </table>
+        </form>
+        <form  >
+           <h1>Your order</h1>
+        <table>
+            <thead>
+                <th>Name</th>
+                <th>Price</th>
+                <th>Value</th>
+                <th>totalprice</th>
+            </thead>
+            <tbody class="showtbody" id="showorderform">
+            {order.map(response =>(
+                   <tr>
+                   <td class='fd-name'>{response.foodname}</td>
+                   <td class='price'>{response.price}</td>
+                   <td>{response.quantity}</td>
+                   <td >{response.totalprice}</td>
+                   <td><input type="submit" name="delete" value="delete"  onClick={() =>this.fetchorderdelete(`${response.orderitem_ID}`)}></input></td>
+                   </tr>
+              
+                     ) )}
+            </tbody>
+        </table>
+        <input type="submit" name="submit" value="Complete order" onClick={()=>this.completeorder()}></input>
+       </form>
 
+        </body>
+
+
+    
 
           );
   }
+  
 }
 
 
@@ -181,9 +341,8 @@ class Login extends React.Component {
     const { redirect } = this.state;
     // const { redirectToReferrer } = this.state;
      if (redirect) {
-       return <Redirect to='/Home' />
+       return <Redirect to='/Home'/>
      }
-  
     return (
       <div>
         <h2>Login</h2>
@@ -254,7 +413,6 @@ class Sign extends React.Component {
     }
     return (
       <div>
-       
          <h1>Sign Up</h1>
          <form  onSubmit={this.handleSubmit}>
               <h4> username</h4>
@@ -269,7 +427,6 @@ class Sign extends React.Component {
               <input type="password" name="password" placeholder="password" id="regpassword" value="password" required></input>
               <h4> confirm password</h4>
               <input type="password" name="password2" placeholder="password again" id="regpassword2" value="password" required></input>
-             
               <input type="submit" name="submit"></input>
        </form>
       </div>
@@ -368,6 +525,94 @@ class password extends React.Component {
   }
 }
 
+class payment extends React.Component {
+  constructor(props) {
+    super(props);
+    this.handleSubmit = this.handleSubmit.bind(this);
+    this.state = {
+      confirmdata: [],
+      redirect: false
+    };
+  }
+  handleSubmit(event){
+    event.preventDefault();
+    const data = new FormData(event.target);
+    fetch('http://localhost/UX2/src/api/api/paymentapi.php?action=checkout', 
+    {
+        method: 'POST',
+        body: data,
+        credentials: 'include'
+    })
+    .then((headers)=> {
+        if(headers.status == 401) {
+            console.log('can not checkout');
+            return;
+        }
+        if(headers.status == 201) {
+          console.log('check out successful');
+          this.setState({ redirect: true });
+          alert("Check out successful")
+            return;
+        }
+    })
+    .catch(function(error) {console.log(error)});
+  }
+  componentDidMount(){
+    fetch('http://localhost/UX2/src/api/api/paymentapi.php?action=confirmorderform',
+    {
+            method: 'GET',
+            credentials: 'include'
+        }
+        )   .then(response => response.json())
+        .then(data => this.setState({ confirmdata: data }));
+  }
+  render() {
+    const { confirmdata } = this.state; 
+    const { redirect } = this.state;
+    // const { redirectToReferrer } = this.state;
+     if (redirect) {
+       return <Redirect to='/' />
+     }
+    return (
+      <div>
+      <table>
+      <thead>
+          <th>Ordernumber</th>
+          <th>Ordertime</th>
+          <th>Totalprice</th>
+      </thead>
+      <tbody class="orderconfirmtbody" id="confirmorderform">
+      {confirmdata.map(confirmdatas =>(
+                    
+                    <tr>
+                    <td type="text" class="orderID">{confirmdatas.orderID}</td>
+                    <td type="datetime" class="ordertime">{confirmdatas.ordertime}</td>
+                    <td type="number" class="totalprice">{confirmdatas.totalprice}</td>
+                    </tr>
+              
+                     ) )}
+      </tbody>
+      
+  </table>
+  <form  onSubmit={this.handleSubmit}>
+        <h3>Payment</h3>
+        <label for="fname">Accepted Cards</label>
+        <label for="cname">Name</label>
+        <input type="text" id="cname" name="cname" value="gggggg"></input>
+        <label for="ccnum">Credit card number</label>
+        <input type="text" id="ccnum" name="ccnum" value="1111222233"></input>
+        <label for="expmonth">Exp Month</label>
+        <input type="text" id="expmonth" name="expmonth" value="April"></input>
+            <label for="expyear">Exp Year</label>
+            <input type="text" id="expyear" name="expyear" value="2021"></input>
+            <label for="cvv">CVV</label>
+            <input type="text" id="cvv" name="cvv"max="3" value="333"></input>
+        <input type="submit" name="submit" id="checkoutupdate"></input>
+  </form>
+  </div>
+    );
+  }
+}
 class Contact extends React.Component {
   render() {
     return (
@@ -381,8 +626,8 @@ class Contact extends React.Component {
   }
 }
 ReactDOM.render(
-  <Main/>, 
-  document.getElementById("root")
+ <BrowserRouter><Main/></BrowserRouter>, 
+  document.getElementById('root')
 );
  
 export default Main;

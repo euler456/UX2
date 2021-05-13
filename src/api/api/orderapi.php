@@ -44,16 +44,29 @@ if(empty($request->query->all())) {
                    $response->setStatusCode(400);
             }
         elseif($request->query->getAlpha('action') == 'showorderform') {    
-                $res = $session->get('sessionObj')->showorderform($request->request->get('orderID'));
+                $res = $session->get('sessionObj')->showorderform();
                 return $res;  
             }
         elseif($request->query->getAlpha('action') == 'sumtotalprice') {    
-                $res = $session->get('sessionObj')->sumtotalprice($request->request->get('orderID'));
-                return $res;  
+                $res = $session->get('sessionObj')->sumtotalprice();
+                if($res === true) {
+                    $response->setStatusCode(201);
+                } elseif($res === false) {
+                    $response->setStatusCode(403);
+                } elseif($res === 0) {
+                    $response->setStatusCode(500);
+                }
         }
         elseif($request->query->getAlpha('action') == 'orderdelete') {    
                 $res = $session->get('sessionObj')->orderdelete(
                      $request->request->get('orderitem_ID'));
+                     if($res === true) {
+                        $response->setStatusCode(201);
+                    } elseif($res === false) {
+                        $response->setStatusCode(403);
+                    } elseif($res === 0) {
+                        $response->setStatusCode(500);
+                    }
      }
         elseif($request->query->getAlpha('action') == 'orderquantity') {    
                 if($request->request->has('F_ID') and
@@ -67,8 +80,7 @@ if(empty($request->query->all())) {
                         $request->request->get('foodname'),
                         $request->request->get('price'),    
                         $request->request->get('quantity'),
-                        $request->request->get('totalprice'),
-                        $request->request->get('orderID')   
+                        $request->request->get('totalprice')
                     );
                     if($res === true) {
                         $response->setStatusCode(201);
