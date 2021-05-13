@@ -18,7 +18,7 @@ const black = '#000000';
 class Main extends React.Component {
   constructor(props){
     super(props);
-    this.state = { color: green,redirect:false };
+    this.state = { color: green };
     this.changeColor = this.changeColor.bind(this);
     this.Logout = this.Logout.bind(this);
   }
@@ -43,18 +43,13 @@ class Main extends React.Component {
         localStorage.removeItem('phone');
         localStorage.removeItem('postcode');
         localStorage.removeItem('CustomerID');    
-        this.setState({ redirect: true });
         alert("logout already");}
         
     })
     .catch(function(error) {console.log(error)});
   }
   render() {
-    const { redirect } = this.state;
-     if (redirect) {
-      console.log('log out');
-      return (<Redirect to='/' />);
-     }
+
     return (
       <div style={{background: this.state.color}}>
       <HashRouter>
@@ -65,7 +60,7 @@ class Main extends React.Component {
           <li><NavLink to="/Home" class="col ">Orderchart</NavLink></li>
           <li><NavLink to="/contact" class="col ">Contact</NavLink></li>
           <li><NavLink to="/Setting" class="col ">Setting</NavLink></li>
-          <li><a onClick={this.Logout}>Logout</a></li>
+          <li><NavLink to="/" class="col" onClick={this.Logout}>Logout</NavLink></li>
           <li class="col "> <button id="dark" class="btn btn-light" onClick={this.changeColor}>Darkmode</button></li>
         </ul>
         <div id="content">
