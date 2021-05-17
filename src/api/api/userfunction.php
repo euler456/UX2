@@ -73,7 +73,7 @@ class sqsuser
         //            $lastCustID = $this->dbconn->lastInsertID();
 
         //            $sql = "INSERT INTO customer(CustomerID,Username,Pass,Email,Phone)  VALUES (:CustomerID,:Username,:Pass,:Email, :Phone)";
-        $sql = "INSERT INTO customer (username,email,phone,postcode,password)  VALUES (:username,:email, :phone,:postcode,:password);";
+        $sql = "INSERT INTO customer (username,email,phone,postcode,password,usertype)  VALUES (:username,:email, :phone,:postcode,:password,'user');";
         $stmt = $this->dbconn->prepare($sql);
         //            $stmt->bindParam(':CustomerID', $lastCustID, PDO::PARAM_INT);
         $stmt->bindParam(':username', $username, PDO::PARAM_STR);
