@@ -34,11 +34,14 @@ if (!$session->has('sessionObj')) {
 if (empty($request->query->all())) {
     $response->setStatusCode(400);
 } elseif ($request->cookies->has('PHPSESSID')) {
-    if ($session->get('sessionObj')->is_rate_limited()) {
+    if ($session->get('sessionObj')->is_rate_limited()){
+        $response->setStatusCode(429);
+    }
+    if ($session->get('sessionObj')->day_rate_limited()){
         $response->setStatusCode(429);
     }
     if ($request->getMethod() == 'POST') {             // register
-        if ($request->query->getAlpha('action') == 'register') {
+        if ($request->query->getAlpha('action') == 'register'){
             if ($request->request->has('username')) {
                 $res = $sqsdb->userExists($request->request->get('username'));
                 if ($res) {
