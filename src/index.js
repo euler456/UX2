@@ -27,7 +27,7 @@ class Main extends React.Component {
     this.setState({ color: newColor })
   }
   Logout=()=>{
-    fetch('http://localhost/UX2/src/api/api/userapi.php?action=logout', 
+    fetch('http://localhost/UX2/src/api/api/api.php?action=logout', 
     {
         method: 'GET',
         credentials: 'include'
@@ -98,7 +98,7 @@ class Home extends React.Component {
     const fd = new FormData();
     fd.append('orderitem_ID', dd);
     console.log(fd);
-   fetch('http://localhost/UX2/src/api/api/orderapi.php?action=orderdelete', 
+   fetch('http://localhost/UX2/src/api/api/api.php?action=orderdelete', 
    {
        method: 'POST',
        body: fd,
@@ -119,9 +119,9 @@ class Home extends React.Component {
    .catch(function(error) {console.log(error)});
      }
   completeorder=()=>{
-    fetch('http://localhost/UX2/src/api/api/orderapi.php?action=sumtotalprice', 
+    fetch('http://localhost/UX2/src/api/api/api.php?action=sumtotalprice', 
     {
-        method: 'POST',
+        method: 'GET',
         credentials: 'include'
     })
    .then((headers) =>{
@@ -154,7 +154,7 @@ class Home extends React.Component {
         fd.append('price', col4 );
         fd.append('quantity', col1 );
         fd.append('totalprice', col5 );
-        fetch('http://localhost/UX2/src/api/api/orderapi.php?action=orderquantity', 
+        fetch('http://localhost/UX2/src/api/api/api.php?action=orderquantity', 
         {
             method: 'POST',
             body: fd,
@@ -177,16 +177,16 @@ class Home extends React.Component {
         }
       });
   });
-    fetch('http://localhost/UX2/src/api/api/orderapi.php?action=displayorderfood',
+    fetch('http://localhost/UX2/src/api/api/api.php?action=displayorderfood',
     {
             method: 'POST',
             credentials: 'include'
         }
         )   .then(response => response.json())
         .then(data => this.setState({ hits: data }));
-    fetch('http://localhost/UX2/src/api/api/orderapi.php?action=showorderform',
+    fetch('http://localhost/UX2/src/api/api/api.php?action=showorderform',
         {
-                method: 'POST',
+                method: 'GET',
                 credentials: 'include'
             }
             )   .then(response => response.json())
@@ -278,7 +278,7 @@ class Login extends React.Component {
     const data = new FormData(event.target);
   
     
-    fetch('http://localhost/UX2/src/api/api/userapi.php?action=login', {
+    fetch('http://localhost/UX2/src/api/api/api.php?action=login', {
       method: 'POST',
       credentials: 'include',
       body: data
@@ -303,7 +303,7 @@ class Login extends React.Component {
       if(headers.status == 200) {
         console.log('login successful');
         this.setState({ redirect: true });
-        fetch('http://localhost/UX2/src/api/api/foodapi.php?action=createorder', 
+        fetch('http://localhost/UX2/src/api/api/api.php?action=createorder', 
         {
             method: 'POST',
             credentials: 'include'
@@ -378,7 +378,7 @@ class Sign extends React.Component {
   handleSubmit(event) {
     event.preventDefault();
     const data = new FormData(event.target);
-    fetch('http://localhost/UX2/src/api/api/userapi.php?action=register', {
+    fetch('http://localhost/UX2/src/api/api/api.php?action=register', {
       method: 'POST',
       credentials: 'include',
       body: data
@@ -448,7 +448,7 @@ class Setting extends React.Component {
     event.preventDefault();
     const data = new FormData(event.target);
     this.props.history.push('/');
-    fetch('http://localhost/UX2/src/api/api/userapi.php?action=update', {
+    fetch('http://localhost/UX2/src/api/api/api.php?action=update', {
       method: 'POST',
       credentials: 'include',
       body: data
@@ -532,10 +532,27 @@ class payment extends React.Component {
   handleSubmit(event){
     event.preventDefault();
     const data = new FormData(event.target);
-    fetch('http://localhost/UX2/src/api/api/paymentapi.php?action=checkout', 
+    fetch('http://localhost/UX2/src/api/api/api.php?action=checkout', 
     {
         method: 'POST',
         body: data,
+        credentials: 'include'
+    })
+    .then((headers)=> {
+        if(headers.status == 401) {
+            console.log('can not checkout');
+            return;
+        }
+        if(headers.status == 201) {
+          this.setState({ redirect: true });
+    
+            return;
+        }
+    })
+    .catch(function(error) {console.log(error)});
+    fetch('http://localhost/UX2/src/api/api/api.php?action=checkoutupdate', 
+    {
+        method: 'POST',
         credentials: 'include'
     })
     .then((headers)=> {
@@ -551,9 +568,10 @@ class payment extends React.Component {
         }
     })
     .catch(function(error) {console.log(error)});
+
   }
   componentDidMount(){
-    fetch('http://localhost/UX2/src/api/api/paymentapi.php?action=confirmorderform',
+    fetch('http://localhost/UX2/src/api/api/api.php?action=confirmorderform',
     {
             method: 'GET',
             credentials: 'include'
