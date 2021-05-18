@@ -1,3 +1,13 @@
+The code includes php and reactJS code.
+First,you need to install the wamp .
+Second,Create the new database which must be called proj2 and input the database file to phpmyadmin.
+Third,put the code folder in the www folder which is in the wamp install folder.
+Fourth,open the special Chrome in this command
+"C:\Program Files\Google\Chrome\Application\chrome.exe" --disable-web-security --disable-gpu --user-data-dir="C:\tmp"
+
+Fifth,cd the file ,and npm start and copy the website url put in that special Chrome
+
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
