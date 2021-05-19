@@ -57,7 +57,7 @@ class Main extends React.Component {
         <h1 >Freshly Login</h1>
         <ul id="header" class="row">
           <li><NavLink to="/" class="col">Login</NavLink></li>
-          <li><NavLink to="/Home" class="col ">Orderchart</NavLink></li>
+          <li><NavLink to="/Home" class="col ">Order</NavLink></li>
           <li><NavLink to="/contact" class="col ">Contact</NavLink></li>
           <li><NavLink to="/Setting" class="col ">Setting</NavLink></li>
           <li><NavLink to="/" class="col" onClick={this.Logout}>Logout</NavLink></li>

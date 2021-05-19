@@ -10,10 +10,10 @@ class sqsSession
     private $email;
     private $phone;
     private $user_token;
-    private $interval=86400;
-    private $limit =1000;
-    private $count =0;
-   
+    private $interval = 60;
+    private $limit = 1000;
+    private $count = 0;
+
     public function __construct()
     {
         $this->origin = 'http://localhost/';
@@ -32,17 +32,16 @@ class sqsSession
     public function day_rate_limited()
     {
         $now = time();
-        if ( $now<$this->last_visit + $this->interval) {
-           if($this->count < $this->limit){
-            $this->count++;
-            return true;
-           }else{
-            return false;
-           }
-        }
-        else {
-            $this->last_visit=$now;
-            $this->count=1;
+        if ($now < $this->last_visit + $this->interval) {
+            if ($this->count < $this->limit) {
+                $this->count++;
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            $this->last_visit = $now;
+            $this->count = 1;
             return true;
         }
     }

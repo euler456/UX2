@@ -3,11 +3,8 @@ include_once("core.php");
 require_once('./vendor/autoload.php');
 require_once('./se.php');
 require_once('./userfunction.php');
-
+//sqsuser is from the userfunction.php which represent database
 $sqsdb = new sqsuser;
-
-
-
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Session;
@@ -24,7 +21,7 @@ $response->headers->set('Access-Control-Allow-Headers', 'origin, content-type, a
 $response->headers->set('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
 $response->headers->set('Access-Control-Allow-Origin', 'http://localhost/');
 $response->headers->set('Access-Control-Allow-Credentials', 'true');
-
+//put session here because here is the place the action started
 $session->start();
 
 if (!$session->has('sessionObj')) {
@@ -34,14 +31,15 @@ if (!$session->has('sessionObj')) {
 if (empty($request->query->all())) {
     $response->setStatusCode(400);
 } elseif ($request->cookies->has('PHPSESSID')) {
-    if ($session->get('sessionObj')->is_rate_limited()){
+    if ($session->get('sessionObj')->is_rate_limited()) {
         $response->setStatusCode(429);
     }
-    if ($session->get('sessionObj')->day_rate_limited()){
+    if ($session->get('sessionObj')->day_rate_limited()) {
         $response->setStatusCode(429);
     }
+    //if the request is post , the code will start the action which is in the POST Block
     if ($request->getMethod() == 'POST') {             // register
-        if ($request->query->getAlpha('action') == 'register'){
+        if ($request->query->getAlpha('action') == 'register') {
             if ($request->request->has('username')) {
                 $res = $sqsdb->userExists($request->request->get('username'));
                 if ($res) {
@@ -75,8 +73,7 @@ if (empty($request->query->all())) {
             } else {
                 $response->setStatusCode(400);
             }
-        } 
-        elseif ($request->query->getAlpha('action') == 'login') {
+        } elseif ($request->query->getAlpha('action') == 'login') {
             if ($request->request->has('username') and $request->request->has('password')) {
                 $res = $session->get('sessionObj')->login(
                     $request->request->get('username'),
@@ -183,8 +180,7 @@ if (empty($request->query->all())) {
             } else {
                 $response->setStatusCode(400);
             }
-        }
-        elseif ($request->query->getAlpha('action') == 'displayfood') {
+        } elseif ($request->query->getAlpha('action') == 'displayfood') {
             $res = $session->get('sessionObj')->display();
             return $res;
             $response->setStatusCode(400);
@@ -296,7 +292,8 @@ if (empty($request->query->all())) {
             $response->setStatusCode(400);
         }
     }
-    if ($request->getMethod() == 'GET') {              // showqueu, accountexists
+    //if the request from the front-end JS is GET , the code will start the action which is in the GET Block
+    if ($request->getMethod() == 'GET') {
         if ($request->query->getAlpha('action') == 'accountexists') {
             if ($request->query->has('username')) {
                 $res = $sqsdb->userExists($request->query->get('username'));
@@ -325,11 +322,9 @@ if (empty($request->query->all())) {
         } elseif ($request->query->getAlpha('action') == 'showorderform') {
             $res = $session->get('sessionObj')->showorderform();
             return $res;
-        }
-        elseif($request->query->getAlpha('action') == 'confirmorderform') {
+        } elseif ($request->query->getAlpha('action') == 'confirmorderform') {
             $res = $session->get('sessionObj')->confirmorderform();
-
-    }
+        }
     }
     if ($request->getMethod() == 'DELETE') {           // delete queue, delete comment
         $response->setStatusCode(400);
