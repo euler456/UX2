@@ -5,6 +5,7 @@ require_once('./se.php');
 require_once('./userfunction.php');
 //sqsuser is from the userfunction.php which represent database
 $sqsdb = new sqsuser;
+
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Session;
@@ -74,6 +75,7 @@ if (empty($request->query->all())) {
                 $response->setStatusCode(400);
             }
         } elseif ($request->query->getAlpha('action') == 'login') {
+            $res = $session->get('sessionObj')->logEvent('login');
             if ($request->request->has('username') and $request->request->has('password')) {
                 $res = $session->get('sessionObj')->login(
                     $request->request->get('username'),
@@ -94,8 +96,8 @@ if (empty($request->query->all())) {
                 $response->setStatusCode(404);
             }
         } elseif ($request->query->getAlpha('action') == 'isloggedin') {
+            
             $res = $session->get('sessionObj')->isLoggedIn();
-
             if ($res == false) {
                 $response->setStatusCode(403);
             } elseif (count($res) == 1) {
@@ -103,6 +105,7 @@ if (empty($request->query->all())) {
                 $response->setContent(json_encode($res));
             }
         } elseif ($request->query->getAlpha('action') == 'update') {
+            $res = $session->get('sessionObj')->logEvent('update');
             $res = $session->get('sessionObj')->isLoggedIn();
             if (($request->request->has('username')) && (count($res) == 1)) {
                 $res = $sqsdb->userExists($request->request->get('username'));
@@ -145,6 +148,7 @@ if (empty($request->query->all())) {
             return $res;
             $response->setStatusCode(400);
         } elseif ($request->query->getAlpha('action') == 'orderdelete') {
+            $res = $session->get('sessionObj')->logEvent('orderdelete');
             $res = $session->get('sessionObj')->orderdelete(
                 $request->request->get('orderitem_ID')
             );
@@ -156,6 +160,7 @@ if (empty($request->query->all())) {
                 $response->setStatusCode(500);
             }
         } elseif ($request->query->getAlpha('action') == 'orderquantity') {
+            $res = $session->get('sessionObj')->logEvent('orderthefood');
             if (
                 $request->request->has('F_ID') and
                 $request->request->has('foodname') and
@@ -265,6 +270,7 @@ if (empty($request->query->all())) {
                 }
             }
         } elseif ($request->query->getAlpha('action') == 'checkout') {
+            $res = $session->get('sessionObj')->logEvent('checkout');
             $res = $session->get('sessionObj')->checkout(
                 $request->request->get('cname'),
                 $request->request->get('ccnum'),
@@ -304,11 +310,13 @@ if (empty($request->query->all())) {
                 }
             }
         } elseif ($request->query->getAlpha('action') == 'logout') {
+            $res = $session->get('sessionObj')->logEvent('logout');
             $session->get('sessionObj')->logout();
             $response->setStatusCode(200);
         } elseif ($request->query->getAlpha('action') == 'orderID') {
             $res = $session->get('sessionObj')->orderID();
         } elseif ($request->query->getAlpha('action') == 'sumtotalprice') {
+            $res = $session->get('sessionObj')->logEvent('complete order');
             $res = $session->get('sessionObj')->sumtotalprice();
             if ($res === true) {
                 $response->setStatusCode(201);

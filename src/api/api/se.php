@@ -86,6 +86,15 @@ class sqsSession
             return 0;
         }
     }
+    public function logEvent($action)
+    {
+        global $sqsdb;
+        if ($sqsdb->logevent($this->CustomerID ,$action)) {
+            return true;
+        } else {
+            return 0;
+        }
+    }
     public function isLoggedIn()
     {
         if ($this->CustomerID === 0) {
@@ -101,9 +110,7 @@ class sqsSession
     public function validate($type, $dirty_string)
     {
     }
-    public function logEvent()
-    {
-    }
+   
 
     //===========================productfunction================================================
     public function display()

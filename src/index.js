@@ -167,7 +167,7 @@ class Home extends React.Component {
             }
             if(headers.status == 201) {
                 console.log('addfood succussful');
-                window.location.reload();
+              //  window.location.reload();
                 return;
             }
         })
@@ -211,8 +211,7 @@ class Home extends React.Component {
                 <th>Quantity</th>
             </thead>
             <tbody id="orderform">
-                  {hits.map(hit =>(
-                    
+                  {hits.map(hit =>( 
                  <tr>
             <td hidden class='fd-id'>{hit.F_ID}</td>
             <td class='fd-name'>{hit.foodname}</td>
@@ -222,7 +221,6 @@ class Home extends React.Component {
             <td>{hit.options}</td>
             <td><input type="submit" name="submit" class="btnSelect"></input></td>
              </tr>
-           
                   ) )}
             </tbody>
         </table>
@@ -244,26 +242,15 @@ class Home extends React.Component {
                    <td>{response.quantity}</td>
                    <td >{response.totalprice}</td>
                    <td><input type="submit" name="delete" value="delete"  onClick={() =>this.fetchorderdelete(`${response.orderitem_ID}`)}></input></td>
-                   </tr>
-              
-                     ) )}
+                   </tr>    ) )}
             </tbody>
         </table>
         <input type="submit" name="submit" value="Complete order" onClick={()=>this.completeorder()}></input>
        </form>
-
         </body>
-
-
-    
-
           );
   }
-  
 }
-
-
-
 class Login extends React.Component {
   constructor() {
     super();

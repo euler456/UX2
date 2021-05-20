@@ -114,15 +114,16 @@ class sqsuser
             return false;
         }
     }
-    function logEvent($CustomerID, $url, $resp_code, $source_ip)
+    function logevent($CustomerID,$action)
     {
-        $sql = "INSERT INTO logtable (url, CustomerID, response_code, ip_addr) 
-                VALUES (:url, :CustomerID, :resp_code, :ip);";
+        $ip = $_SERVER['REMOTE_ADDR'];     
+        $sql = "INSERT INTO logtable ( CustomerID ,ip_addr, action ,usertype) 
+                VALUES (:CustomerID,:ip,:action,'user');";
         $stmt = $this->dbconn->prepare($sql);
         $stmt->bindParam(':CustomerID', $CustomerID, PDO::PARAM_INT);
-        $stmt->bindParam(':url', $url, PDO::PARAM_STR);
-        $stmt->bindParam(':resp_code', $resp_code, PDO::PARAM_INT);
-        $stmt->bindParam(':ip', $source_ip, PDO::PARAM_STR);
+     
+        $stmt->bindParam(':action', $action, PDO::PARAM_STR);
+        $stmt->bindParam(':ip',  $ip , PDO::PARAM_INT);
         $result = $stmt->execute();
         if ($result === true) {
             return true;
@@ -132,19 +133,10 @@ class sqsuser
     }
     function displayorderfood()
     {
-        /*$dbhost = 'localhost:3307';
-            $dbuser = 'root';
-            $dbpass = '';
-            $db     = 'proj2';*/
-
         $sql = "SELECT * FROM food";
         $stmt = $this->dbconn->prepare($sql);
         $stmt->execute();
-        //$conn  = mysqli_connect($dbhost,$dbuser,'',$db);
         $result = $stmt->fetchAll();
-        //$sql=mysqli_query($conn,"SELECT * FROM food");
-        //$result=mysqli_fetch_all($sql,MYSQLI_ASSOC);
-
         exit(json_encode($result));
     }
     function sumtotalpriceff($CustomerID)
@@ -193,11 +185,6 @@ class sqsuser
     }
     function displayfood()
     {
-        /*$dbhost = 'localhost:3307';
-            $dbuser = 'root';
-            $dbpass = '';
-            $db     = 'proj2';*/
-
         $sql = "SELECT * FROM food";
         $stmt = $this->dbconn->prepare($sql);
         $stmt->execute();
@@ -260,9 +247,7 @@ class sqsuser
     {
         $sql = "INSERT INTO orderform (orderstatus,CustomerID,totalprice)  VALUES ('Notpayed',:CustomerID,'0');";
         $stmt = $this->dbconn->prepare($sql);
-        // $stmt->bindParam(':orderstatus', $orderstatus, PDO::PARAM_STR);
         $stmt->bindParam(':CustomerID', $CustomerID, PDO::PARAM_INT);
-        // $stmt->bindParam(':totalprice', $totalprice, PDO::PARAM_INT);   
         $result = $stmt->execute();
         if ($result === true) {
             return true;
@@ -275,7 +260,6 @@ class sqsuser
 
         $sql = "INSERT INTO orderitem (F_ID,foodname,price,quantity,totalprice,orderID)  VALUES (:F_ID,:foodname,:price,:quantity,:totalprice,(SELECT max(orderID) orderID FROM orderform where CustomerID= :CustomerID ));";
         $stmt = $this->dbconn->prepare($sql);
-        //  $stmt->bindParam(':F_ID', $F_ID, PDO::PARAM_INT);  
         $stmt->bindParam(':F_ID', $F_ID, PDO::PARAM_INT);
         $stmt->bindParam(':foodname', $foodname, PDO::PARAM_STR);
         $stmt->bindParam(':price', $price, PDO::PARAM_INT);
