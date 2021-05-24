@@ -265,7 +265,7 @@ class Login extends React.Component {
     const data = new FormData(event.target);
   
     
-    fetch('http://localhost/UX2/src/api/api/api.php?action=login', {
+    fetch('https://ux2website.herokuapp.com/UX2/src/api/api/api.php?action=login', {
       method: 'POST',
       credentials: 'include',
       body: data
