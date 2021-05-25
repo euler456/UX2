@@ -27,7 +27,7 @@ class Main extends React.Component {
     this.setState({ color: newColor })
   }
   Logout=()=>{
-    fetch('http://localhost/UX2/src/api/api/api.php?action=logout', 
+    fetch('https://ux2website.herokuapp.com/public/api/api.php?action=logout', 
     {
         method: 'GET',
         credentials: 'include'
@@ -98,7 +98,7 @@ class Home extends React.Component {
     const fd = new FormData();
     fd.append('orderitem_ID', dd);
     console.log(fd);
-   fetch('http://localhost/UX2/src/api/api/api.php?action=orderdelete', 
+   fetch('https://ux2website.herokuapp.com/src/api/api/api.php?action=orderdelete', 
    {
        method: 'POST',
        body: fd,
@@ -119,7 +119,7 @@ class Home extends React.Component {
    .catch(function(error) {console.log(error)});
      }
   completeorder=()=>{
-    fetch('http://localhost/UX2/src/api/api/api.php?action=sumtotalprice', 
+    fetch('https://ux2website.herokuapp.com/public/api/api.php?action=sumtotalprice', 
     {
         method: 'GET',
         credentials: 'include'
@@ -290,7 +290,7 @@ class Login extends React.Component {
       if(headers.status == 200) {
         console.log('login successful');
         this.setState({ redirect: true });
-        fetch('http://localhost/UX2/src/api/api/api.php?action=createorder', 
+        fetch('https://ux2website.herokuapp.com/public/api/api.php?action=createorder', 
         {
             method: 'POST',
             credentials: 'include'
@@ -365,7 +365,7 @@ class Sign extends React.Component {
   handleSubmit(event) {
     event.preventDefault();
     const data = new FormData(event.target);
-    fetch('http://localhost/UX2/src/api/api/api.php?action=register', {
+    fetch('https://ux2website.herokuapp.com/public/api/api.php?action=register', {
       method: 'POST',
       credentials: 'include',
       body: data
@@ -435,7 +435,7 @@ class Setting extends React.Component {
     event.preventDefault();
     const data = new FormData(event.target);
     this.props.history.push('/');
-    fetch('http://localhost/UX2/src/api/api/api.php?action=update', {
+    fetch('https://ux2website.herokuapp.com/public/api/api.php?action=update', {
       method: 'POST',
       credentials: 'include',
       body: data
@@ -519,7 +519,7 @@ class payment extends React.Component {
   handleSubmit(event){
     event.preventDefault();
     const data = new FormData(event.target);
-    fetch('http://localhost/UX2/src/api/api/api.php?action=checkout', 
+    fetch('https://ux2website.herokuapp.com/public/api/api.php?action=checkout', 
     {
         method: 'POST',
         body: data,
@@ -537,7 +537,7 @@ class payment extends React.Component {
         }
     })
     .catch(function(error) {console.log(error)});
-    fetch('http://localhost/UX2/src/api/api/api.php?action=checkoutupdate', 
+    fetch('https://ux2website.herokuapp.com/public/api/api.php?action=checkoutupdate', 
     {
         method: 'POST',
         credentials: 'include'
@@ -558,7 +558,7 @@ class payment extends React.Component {
 
   }
   componentDidMount(){
-    fetch('http://localhost/UX2/src/api/api/api.php?action=confirmorderform',
+    fetch('https://ux2website.herokuapp.com/public/api/api.php?action=confirmorderform',
     {
             method: 'GET',
             credentials: 'include'
