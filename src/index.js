@@ -26,6 +26,7 @@ class Main extends React.Component {
     const newColor = this.state.color == green ? black : green;
     this.setState({ color: newColor })
   }
+  
   Logout=()=>{
     fetch('https://ux2website.herokuapp.com/public/api/api.php?action=logout', 
     {
