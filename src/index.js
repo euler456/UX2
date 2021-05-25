@@ -154,7 +154,7 @@ class Home extends React.Component {
         fd.append('price', col4 );
         fd.append('quantity', col1 );
         fd.append('totalprice', col5 );
-        fetch('http://localhost/UX2/src/api/api/api.php?action=orderquantity', 
+        fetch('https://ux2website.herokuapp.com/UX2/public/api/api.php?action=orderquantity', 
         {
             method: 'POST',
             body: fd,
