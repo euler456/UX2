@@ -8,9 +8,21 @@ class sqsuser
     public function __construct()
     {
      //here to connect the database in the computer
-        $dbURI = 'mysql:host=' . 'localhost' . ';port=3307;dbname=' . 'proj2';
-        $this->dbconn = new PDO($dbURI, 'root', '');
-        $this->dbconn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+       // $dbURI = 'mysql:host=' . 'localhost' . ';port=3307;dbname=' . 'proj2';
+      //  $this->dbconn = new PDO($dbURI, 'root', '');
+      //  $this->dbconn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+        $cleardb_url = parse_url(getenv("mysql://b8ca1f3a4080be:3e9e1a39@us-cdbr-east-03.cleardb.com/heroku_fba7e9064851709?reconnect=true"));
+$cleardb_server = $cleardb_url["us-cdbr-east-03.cleardb.com"];
+$cleardb_username = $cleardb_url["b8ca1f3a4080be"];
+$cleardb_password = $cleardb_url["3e9e1a39"];
+$cleardb_db = substr($cleardb_url["heroku_fba7e9064851709"],1);
+$active_group = 'default';
+$query_builder = TRUE;
+// Connect to DB
+$dbconn = mysqli_connect($cleardb_server, $cleardb_username, $cleardb_password, $cleardb_db);
+$this->dbconn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
     }
 
     function checkLogin($u, $p)
