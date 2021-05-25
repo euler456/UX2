@@ -184,7 +184,7 @@ class Home extends React.Component {
         }
         )   .then(response => response.json())
         .then(data => this.setState({ hits: data }));
-    fetch('http://localhost/UX2/src/api/api/api.php?action=showorderform',
+    fetch('https://ux2website.herokuapp.com/UX2/public/api/api.php?action=showorderform',
         {
                 method: 'GET',
                 credentials: 'include'
