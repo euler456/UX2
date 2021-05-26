@@ -71,7 +71,7 @@ class sqsSession
     public function register($username, $email, $phone, $postcode, $password, $csrf)
     {
         global $sqsdb;
-        if ($sqsdb->registerUser($this->CustomerID, $username,  $email, $phone, $postcode, $password)) {
+        if ($sqsdb->registerUser( $username,  $email, $phone, $postcode, $password)) {
             return true;
         } else {
             return 0;

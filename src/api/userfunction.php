@@ -74,7 +74,7 @@ $this->dbconn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         $result = $stmt->fetchAll();
         return $result;
     }
-    function registerUser($CustomerID, $username, $email, $phone, $postcode, $password)
+    function registerUser( $username, $email, $phone, $postcode, $password)
     {
         // Retister user into system, assume validation has happened.
         // return UID created or false if fail
