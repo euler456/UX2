@@ -1,5 +1,5 @@
 {
-  "homepage": "http:euler456.github.io/UX2",
+ "homepage": "https://ux2website.herokuapp.com/",
   "name": "509at1",
   "version": "0.1.0",
   "private": true,
@@ -8,6 +8,7 @@
     "@testing-library/jest-dom": "^5.11.9",
     "@testing-library/react": "^11.2.5",
     "@testing-library/user-event": "^12.8.0",
+    "create-app-react": "^1.0.6",
     "jquery": "^3.6.0",
     "react": "^17.0.1",
     "react-dark-mode-toggle": "^0.2.0",

@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import "./index.css";
 import $, { extend } from 'jquery';
+//"homepage": "http:euler456.github.io/UX2",
 //import Redirect from 'react-router'
 //import { fetchlogin, fetchregister,fetchaccountexists ,fetchisloggedin,fetchlogout } from './api/app/app.js';
 //"C:\Program Files\Google\Chrome\Application\chrome.exe" --disable-web-security --disable-gpu --user-data-dir="C:\tmp"
