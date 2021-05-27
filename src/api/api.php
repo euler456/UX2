@@ -24,11 +24,9 @@ $response->headers->set('Access-Control-Allow-Origin', 'https://ux2website.herok
 $response->headers->set('Access-Control-Allow-Credentials', 'true');
 //put session here because here is the place the action started
 $session->start();
-
 if (!$session->has('sessionObj')) {
     $session->set('sessionObj', new sqsSession);
 }
-
 if (empty($request->query->all())) {
     $response->setStatusCode(400);
 } elseif ($request->cookies->has('PHPSESSID')) {
@@ -96,7 +94,6 @@ if (empty($request->query->all())) {
                 $response->setStatusCode(404);
             }
         } elseif ($request->query->getAlpha('action') == 'isloggedin') {
-            
             $res = $session->get('sessionObj')->isLoggedIn();
             if ($res == false) {
                 $response->setStatusCode(403);
