@@ -16,7 +16,7 @@ class sqsSession
 
     public function __construct()
     {
-        $this->origin = 'http://localhost/';
+        $this->origin = 'https://ux2website.herokuapp.com/';
     }
     public function is_rate_limited()
     {

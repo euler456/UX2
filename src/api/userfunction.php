@@ -9,8 +9,8 @@ class sqsuser
     {
      //here to connect the database in the computer
        // $dbURI = 'mysql:host=' . 'localhost' . ';port=3307;dbname=' . 'proj2';
-      //  $this->dbconn = new PDO($dbURI, 'root', '');
-      //  $this->dbconn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    //  $this->dbconn = new PDO($dbURI, 'root', '');
+     //  $this->dbconn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
         $cleardb_url = parse_url(getenv("mysql://bbd9c4ff4dfd71:53b615e5@us-cdbr-east-03.cleardb.com/heroku_2934035b80b94cc?reconnect=true"));
 $cleardb_server = $cleardb_url["us-cdbr-east-03.cleardb.com"];
