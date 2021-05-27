@@ -181,14 +181,14 @@ class Home extends React.Component {
         }
       });
   });
-    fetch('https://ux2website.herokuapp.com/UX2/public/api/api.php?action=displayorderfood',
+    fetch('https://ux2website.herokuapp.com/UX2/src/api/api.php?action=displayorderfood',
     {
             method: 'POST',
             credentials: 'include'
         }
         )   .then(response => response.json())
         .then(data => this.setState({ hits: data }));
-    fetch('https://ux2website.herokuapp.com/UX2/public/api/api.php?action=showorderform',
+    fetch('https://ux2website.herokuapp.com/UX2/src/api/api.php?action=showorderform',
         {
                 method: 'GET',
                 credentials: 'include'
