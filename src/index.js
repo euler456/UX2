@@ -292,7 +292,7 @@ class Login extends React.Component {
       if(headers.status == 200) {
         console.log('login successful');
         this.setState({ redirect: true });
-        fetch('https://ux2website.herokuapp.com/UX2/src/api/api.php?action=createorder', 
+        fetch('https://ux2website.herokuapp.com/src/api/api.php?action=createorder', 
         {
             method: 'POST',
             credentials: 'include'
