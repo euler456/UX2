@@ -20,7 +20,7 @@ $cleardb_db = substr($cleardb_url["heroku_2934035b80b94cc"],1);
 $active_group = 'default';
 $query_builder = TRUE;
 // Connect to DB
-$dbconn = mysqli_connect($cleardb_server, $cleardb_username, $cleardb_password, $cleardb_db);
+$this->dbconn = new PDO($cleardb_server, $cleardb_username, $cleardb_password, $cleardb_db);
 $this->dbconn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
     }
