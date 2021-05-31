@@ -35,7 +35,7 @@ class Main extends React.Component {
         credentials: 'include'
     })
     .then((headers) =>{
-        if(headers.status != 200) {
+        if(headers.status == 201) {
             console.log('logout failed Server-Side, but make client login again');
         }
         else{
