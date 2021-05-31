@@ -219,7 +219,7 @@ class Home extends React.Component {
                  <tr>
             <td hidden class='fd-id'>{hit.F_ID}</td>
             <td class='fd-name'>{hit.foodname}</td>
-            <td ><img src={require(`./images/${hit.image}.jpg`).default}></img></td>
+            <td ><img src={require(`.public/images/${hit.image}.jpg`).default}></img></td>
             <td class='price'>{hit.price}</td>
             <td><input type="number" class="fd-value" name="quantity" min="0" max="50"></input></td>
             <td>{hit.options}</td>
