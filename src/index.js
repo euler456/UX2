@@ -29,7 +29,7 @@ class Main extends React.Component {
   }
   
   Logout=()=>{
-    fetch('src/api/api.php?action=logout', 
+    fetch('app/src/api/api.php?action=logout', 
     {
         method: 'GET',
         credentials: 'include'
@@ -100,7 +100,7 @@ class Home extends React.Component {
     const fd = new FormData();
     fd.append('orderitem_ID', dd);
     console.log(fd);
-   fetch('src/api/api.php?action=orderdelete', 
+   fetch('app/src/api/api.php?action=orderdelete', 
    {
        method: 'POST',
        body: fd,
@@ -121,7 +121,7 @@ class Home extends React.Component {
    .catch(function(error) {console.log(error)});
      }
   completeorder=()=>{
-    fetch('src/api/api.php?action=sumtotalprice', 
+    fetch('app/src/api/api.php?action=sumtotalprice', 
     {
         method: 'GET',
         credentials: 'include'
@@ -156,7 +156,7 @@ class Home extends React.Component {
         fd.append('price', col4 );
         fd.append('quantity', col1 );
         fd.append('totalprice', col5 );
-        fetch('https://ux2website.herokuapp.com/UX2/app/src/api/api.php?action=orderquantity', 
+        fetch('https://ux2website.herokuapp.com/UX2/app/app/src/api/api.php?action=orderquantity', 
 
         
         {
@@ -181,14 +181,14 @@ class Home extends React.Component {
         }
       });
   });
-    fetch('src/api/api.php?action=displayorderfood',
+    fetch('app/src/api/api.php?action=displayorderfood',
     {
             method: 'POST',
             credentials: 'include'
         }
         )   .then(response => response.json())
         .then(data => this.setState({ hits: data }));
-    fetch('src/api/api.php?action=showorderform',
+    fetch('app/src/api/api.php?action=showorderform',
         {
                 method: 'GET',
                 credentials: 'include'
@@ -267,7 +267,7 @@ class Login extends React.Component {
   handleSubmit(event) {
     event.preventDefault();
     const data = new FormData(event.target);
-    fetch('src/api/api.php?action=login', {
+    fetch('app/src/api/api.php?action=login', {
       method: 'POST',
       credentials: 'include',
       body: data
@@ -292,7 +292,7 @@ class Login extends React.Component {
       if(headers.status == 200) {
         console.log('login successful');
         this.setState({ redirect: true });
-        fetch('src/api/api.php?action=createorder', 
+        fetch('app/src/api/api.php?action=createorder', 
         {
             method: 'POST',
             credentials: 'include'
@@ -367,7 +367,7 @@ class Sign extends React.Component {
   handleSubmit(event) {
     event.preventDefault();
     const data = new FormData(event.target);
-    fetch('src/api/api.php?action=register', {
+    fetch('app/src/api/api.php?action=register', {
       method: 'POST',
       credentials: 'include',
       body: data
@@ -437,7 +437,7 @@ class Setting extends React.Component {
     event.preventDefault();
     const data = new FormData(event.target);
     this.props.history.push('/');
-    fetch('src/api/api.php?action=update', {
+    fetch('app/src/api/api.php?action=update', {
       method: 'POST',
       credentials: 'include',
       body: data
@@ -521,7 +521,7 @@ class payment extends React.Component {
   handleSubmit(event){
     event.preventDefault();
     const data = new FormData(event.target);
-    fetch('https://ux2website.herokuapp.com/UX/src/api/api.php?action=checkout', 
+    fetch('https://ux2website.herokuapp.com/UX/app/src/api/api.php?action=checkout', 
     {
         method: 'POST',
         body: data,
@@ -539,7 +539,7 @@ class payment extends React.Component {
         }
     })
     .catch(function(error) {console.log(error)});
-    fetch('src/api/api.php?action=checkoutupdate', 
+    fetch('app/src/api/api.php?action=checkoutupdate', 
     {
         method: 'POST',
         credentials: 'include'
@@ -560,7 +560,7 @@ class payment extends React.Component {
 
   }
   componentDidMount(){
-    fetch('src/api/api.php?action=confirmorderform',
+    fetch('app/src/api/api.php?action=confirmorderform',
     {
             method: 'GET',
             credentials: 'include'
