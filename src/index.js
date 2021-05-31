@@ -35,8 +35,9 @@ class Main extends React.Component {
         credentials: 'include'
     })
     .then((headers) =>{
-        if(headers.status == 201) {
+        if(headers.status == 200) {
             console.log('logout failed Server-Side, but make client login again');
+            alert("logout ");
         }
         else{
         localStorage.removeItem('csrf');
