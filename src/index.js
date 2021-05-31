@@ -100,7 +100,7 @@ class Home extends React.Component {
     const fd = new FormData();
     fd.append('orderitem_ID', dd);
     console.log(fd);
-   fetch('https://ux2website.herokuapp.com/src/api/api/api.php?action=orderdelete', 
+   fetch('https://ux2website.herokuapp.com/src/api/api.php?action=orderdelete', 
    {
        method: 'POST',
        body: fd,
@@ -156,7 +156,7 @@ class Home extends React.Component {
         fd.append('price', col4 );
         fd.append('quantity', col1 );
         fd.append('totalprice', col5 );
-        fetch('https://ux2website.herokuapp.com/UX2/public/api/api.php?action=orderquantity', 
+        fetch('https://ux2website.herokuapp.com/UX2/src/api/api.php?action=orderquantity', 
 
         
         {

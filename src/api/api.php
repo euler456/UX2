@@ -142,6 +142,7 @@ if (empty($request->query->all())) {
             }
         } elseif ($request->query->getAlpha('action') == 'displayorderfood') {
             $res = $session->get('sessionObj')->displayorder();
+            echo("hello");
             return $res;
             $response->setStatusCode(400);
         } elseif ($request->query->getAlpha('action') == 'orderdelete') {
