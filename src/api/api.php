@@ -74,6 +74,7 @@ if (empty($request->query->all())) {
             }
         } elseif ($request->query->getAlpha('action') == 'login') {
             $res = $session->get('sessionObj')->logEvent('login');
+            echo("hello");
             if ($request->request->has('username') and $request->request->has('password')) {
                 $res = $session->get('sessionObj')->login(
                     $request->request->get('username'),
@@ -327,6 +328,7 @@ if (empty($request->query->all())) {
             }
         } elseif ($request->query->getAlpha('action') == 'showorderform') {
             $res = $session->get('sessionObj')->showorderform();
+            echo("hello");
             return $res;
         } elseif ($request->query->getAlpha('action') == 'confirmorderform') {
             $res = $session->get('sessionObj')->confirmorderform();
