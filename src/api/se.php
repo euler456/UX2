@@ -106,7 +106,6 @@ class sqsSession
     public function logout()
     {
         $this->CustomerID = 0;
-        
     }
     public function validate($type, $dirty_string)
     {

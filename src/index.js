@@ -29,15 +29,14 @@ class Main extends React.Component {
   }
   
   Logout=()=>{
-    fetch('app/src/api/api.php?action=logout', 
+    fetch('src/api/api.php?action=logout', 
     {
         method: 'GET',
         credentials: 'include'
     })
     .then((headers) =>{
-        if(headers.status == 200) {
+        if(headers.status != 200) {
             console.log('logout failed Server-Side, but make client login again');
-            alert("logout ");
         }
         else{
         localStorage.removeItem('csrf');
@@ -101,7 +100,7 @@ class Home extends React.Component {
     const fd = new FormData();
     fd.append('orderitem_ID', dd);
     console.log(fd);
-   fetch('app/src/api/api.php?action=orderdelete', 
+   fetch('src/api/api.php?action=orderdelete', 
    {
        method: 'POST',
        body: fd,
@@ -122,7 +121,7 @@ class Home extends React.Component {
    .catch(function(error) {console.log(error)});
      }
   completeorder=()=>{
-    fetch('app/src/api/api.php?action=sumtotalprice', 
+    fetch('src/api/api.php?action=sumtotalprice', 
     {
         method: 'GET',
         credentials: 'include'
@@ -157,7 +156,7 @@ class Home extends React.Component {
         fd.append('price', col4 );
         fd.append('quantity', col1 );
         fd.append('totalprice', col5 );
-        fetch('https://ux2website.herokuapp.com/UX2/app/app/src/api/api.php?action=orderquantity', 
+        fetch('https://ux2website.herokuapp.com/UX2/app/src/api/api.php?action=orderquantity', 
 
         
         {
@@ -182,14 +181,14 @@ class Home extends React.Component {
         }
       });
   });
-    fetch('app/src/api/api.php?action=displayorderfood',
+    fetch('src/api/api.php?action=displayorderfood',
     {
             method: 'POST',
             credentials: 'include'
         }
         )   .then(response => response.json())
         .then(data => this.setState({ hits: data }));
-    fetch('app/src/api/api.php?action=showorderform',
+    fetch('src/api/api.php?action=showorderform',
         {
                 method: 'GET',
                 credentials: 'include'
@@ -268,7 +267,7 @@ class Login extends React.Component {
   handleSubmit(event) {
     event.preventDefault();
     const data = new FormData(event.target);
-    fetch('app/src/api/api.php?action=login', {
+    fetch('src/api/api.php?action=login', {
       method: 'POST',
       credentials: 'include',
       body: data
@@ -293,7 +292,7 @@ class Login extends React.Component {
       if(headers.status == 200) {
         console.log('login successful');
         this.setState({ redirect: true });
-        fetch('app/src/api/api.php?action=createorder', 
+        fetch('src/api/api.php?action=createorder', 
         {
             method: 'POST',
             credentials: 'include'
@@ -368,7 +367,7 @@ class Sign extends React.Component {
   handleSubmit(event) {
     event.preventDefault();
     const data = new FormData(event.target);
-    fetch('app/src/api/api.php?action=register', {
+    fetch('src/api/api.php?action=register', {
       method: 'POST',
       credentials: 'include',
       body: data
@@ -438,7 +437,7 @@ class Setting extends React.Component {
     event.preventDefault();
     const data = new FormData(event.target);
     this.props.history.push('/');
-    fetch('app/src/api/api.php?action=update', {
+    fetch('src/api/api.php?action=update', {
       method: 'POST',
       credentials: 'include',
       body: data
@@ -522,7 +521,7 @@ class payment extends React.Component {
   handleSubmit(event){
     event.preventDefault();
     const data = new FormData(event.target);
-    fetch('https://ux2website.herokuapp.com/UX/app/src/api/api.php?action=checkout', 
+    fetch('https://ux2website.herokuapp.com/UX/src/api/api.php?action=checkout', 
     {
         method: 'POST',
         body: data,
@@ -540,7 +539,7 @@ class payment extends React.Component {
         }
     })
     .catch(function(error) {console.log(error)});
-    fetch('app/src/api/api.php?action=checkoutupdate', 
+    fetch('src/api/api.php?action=checkoutupdate', 
     {
         method: 'POST',
         credentials: 'include'
@@ -561,7 +560,7 @@ class payment extends React.Component {
 
   }
   componentDidMount(){
-    fetch('app/src/api/api.php?action=confirmorderform',
+    fetch('src/api/api.php?action=confirmorderform',
     {
             method: 'GET',
             credentials: 'include'
