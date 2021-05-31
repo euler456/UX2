@@ -156,7 +156,7 @@ class Home extends React.Component {
         fd.append('price', col4 );
         fd.append('quantity', col1 );
         fd.append('totalprice', col5 );
-        fetch('https://ux2website.herokuapp.com/UX2/app/app/src/api/api.php?action=orderquantity', 
+        fetch('src/api/api.php?action=orderquantity', 
 
         
         {
@@ -181,14 +181,14 @@ class Home extends React.Component {
         }
       });
   });
-    fetch('app/src/api/api.php?action=displayorderfood',
+    fetch('src/api/api.php?action=displayorderfood',
     {
             method: 'POST',
             credentials: 'include'
         }
         )   .then(response => response.json())
         .then(data => this.setState({ hits: data }));
-    fetch('app/src/api/api.php?action=showorderform',
+    fetch('src/api/api.php?action=showorderform',
         {
                 method: 'GET',
                 credentials: 'include'
@@ -267,7 +267,7 @@ class Login extends React.Component {
   handleSubmit(event) {
     event.preventDefault();
     const data = new FormData(event.target);
-    fetch('app/src/api/api.php?action=login', {
+    fetch('src/api/api.php?action=login', {
       method: 'POST',
       credentials: 'include',
       body: data
