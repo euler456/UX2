@@ -267,7 +267,7 @@ class Login extends React.Component {
   handleSubmit(event) {
     event.preventDefault();
     const data = new FormData(event.target);
-    fetch('src/api/api.php?action=login', {
+    fetch('/src/api/api.php?action=login', {
       method: 'POST',
       credentials: 'include',
       body: data
